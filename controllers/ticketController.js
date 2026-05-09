@@ -77,6 +77,37 @@ const getTicketById = async (req, res) => {
     }
 }
 
+const getTicketByStatus = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const { status } = req.query;
+
+    //     const validStatus = ["pending", "in-progress", "resolved", "closed"];
+
+    //     if (!validStatus.includes(status)) {
+    //        return res.status(400).json({
+    //        message: "Invalid ticket status."
+    //     });
+    //    }
+    console.log(status);
+
+        const tickets = await Tickets.find({
+            // createdBy: userId,
+            status: status
+        });
+        console.log(tickets);
+        console.log(req.query);
+        console.log(status);
+
+        res.status(200).json({ tickets });
+
+
+    } catch (error) {
+         res.status(500).json({ message: "Error fetching status ticket.", error });
+    }
+}
+
+
 const deleteTicket = async(req , res)=> {
     const userId = req.user.id;
     const ticketId = req.params.id;
@@ -102,5 +133,6 @@ module.exports = {
     createTicket,
     getAllTickets,
     getTicketById,
+    getTicketByStatus,
     deleteTicket
 }
