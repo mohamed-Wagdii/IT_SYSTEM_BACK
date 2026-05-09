@@ -98,9 +98,67 @@ const deleteTicket = async(req , res)=> {
     }
 };
 
+
+
+////////////////////////////////
+
+const updateTicketStatus = async (req,res) =>{
+    try {
+    
+      const ticketId = req.params.id;
+      const {status} = req.body;
+
+
+      const allowedStatus =[
+      "pending",
+      "in-progress",
+       "resolved",
+        "closed"
+      ];
+      
+
+      if (!allowedStatus.includes(status)) {
+        return res.status(400).json({  message: "Invalid status value"});
+      };
+
+      const ticket = await Tickets.findById(ticketId);
+      if (!ticket) {
+         return res.status(404).json({
+        message: "Ticket not found"
+         });
+      };
+
+
+       status = ticket.status 
+
+
+       await ticket.save();
+
+
+
+      res.status (200).json({msg:"ticket status updated sucessfully",
+        ticket });
+
+
+
+        
+    } catch (error) {
+         res.status(500).json({
+      message: "Server error",
+    });
+    }
+};
+
+
+
+
+
+
+
 module.exports = {
     createTicket,
     getAllTickets,
     getTicketById,
-    deleteTicket
+    deleteTicket,
+    updateTicketStatus
 }
